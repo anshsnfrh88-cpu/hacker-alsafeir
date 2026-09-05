@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #fce4ec;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .card {
+            background: #fff5f7;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(233, 30, 99, 0.15);
+            text-align: center;
+            position: relative;
+            border: 1px solid #f8bbd0;
+        }
+
+        /* Tree Animation */
+        .tree-container {
+            position: relative;
+            height: 220px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .trunk {
+            width: 14px;
+            height: 100px;
+            background: #8d6e63;
+            border-radius: 10px 10px 0 0;
+            position: relative;
+            z-index: 1;
+            animation: growTrunk 1.5s ease-out forwards;
+        }
+
+        .heart-leaf {
+            position: absolute;
+            color: #e91e63;
+            font-size: 20px;
+            animation: bloom 1.5s ease-out forwards;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        /* Message Box */
+        .message-box {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px dashed #ec407a;
+            color: #880e4f;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .message-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #c2185b;
+            margin-bottom: 8px;
+        }
+
+        /* Countdown Timer */
+        .countdown-title {
+            font-size: 14px;
+            color: #ad1457;
+            margin-bottom: 8px;
+        }
+
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .timer-box {
+            background: #e91e63;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            min-width: 55px;
+            box-shadow: 0 4px 10px rgba(233, 30, 99, 0.2);
+        }
+
+        .timer-num {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .timer-label {
+            font-size: 10px;
+            opacity: 0.9;
+        }
+
+        @keyframes growTrunk {
+            from { height: 0; }
+            to { height: 100px; }
+        }
+
+        @keyframes bloom {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="tree-container" id="tree">
+            <div class="trunk"></div>
+        </div>
+
+        <div class="message-box">
+            <div class="message-title">To the love of my life ❤️</div>
+            Happy Birthday in advance! I can't wait to celebrate your special day with you.
+        </div>
+
+        <div class="countdown-title">Waiting for your birthday in...</div>
+        <div class="timer">
+            <div class="timer-box">
+                <div class="timer-num" id="days">00</div>
+                <div class="timer-label">Days</div>
+            </div>
+            <div class="timer-box">
+                <div class="timer-num" id="hours">00</div>
+                <div class="timer-label">Hours</div>
+            </div>
+            <div class="timer-box">
+                <div class="timer-num" id="minutes">00</div>
+                <div class="timer-label">Mins</div>
+            </div>
+            <div class="timer-box">
+                <div class="timer-num" id="seconds">00</div>
+                <div class="timer-label">Secs</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate heart leaves
+        const tree = document.getElementById('tree');
+        const leafCount = 45;
+
+        for (let i = 0; i < leafCount; i++) {
+            const leaf = document.createElement('div');
+            leaf.className = 'heart-leaf';
+            leaf.innerHTML = '❤️';
+            
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 70 + 10;
+            const x = Math.cos(angle) * distance;
+            const y = Math.sin(angle) * distance - 80;
+            
+            const size = Math.random() * 14 + 12;
+            const delay = Math.random() * 1.5 + 1;
+
+            leaf.style.left = `calc(50% + ${x}px)`;
+            leaf.style.top = `calc(60% + ${y}px)`;
+            leaf.style.fontSize = `${size}px`;
+            leaf.style.animationDelay = `${delay}s`;
+
+            tree.appendChild(leaf);
+        }
+
+        // Countdown Date (Year, Month Index 0-11, Day)
+        const targetDate = new Date(2026, 11, 25, 0, 0, 0).getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = String(days).padStart(2, '0');
+                document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+                document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+            } else {
+                document.querySelector('.countdown-title').innerText = "🎉 Happy Birthday! 🎉";
+                document.querySelector('.timer').style.display = 'none';
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
